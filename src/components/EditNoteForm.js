@@ -1,22 +1,26 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useEffect, useState } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import { Form, FormGroup, Label, Input, TextArea } from './ui/Forms';
 import Button from './ui/Button';
-import getLocalStorageData from '../utils/getLocalStorageData';
+import Message from './ui/Message';
 
 const EditNoteForm = () => {
   const history = useHistory();
   const location = useLocation();
-  const [allNotes, setAllNotes] = useState(null);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [currentNote, setCurrentNote] = useState({ title: '', note: '' });
 
   useEffect(() => {
-    const notes = getLocalStorageData('notes');
-    setAllNotes(notes);
-
     const noteId = location.pathname.replace('/edit/', '');
-    const currentNotes = notes.filter((note) => note.id === noteId);
-    setCurrentNote(currentNotes[0]);
+
+    async function fetchData() {
+      const response = await fetch(`http://localhost:3001/api/notes/${noteId}`);
+      const data = await response.json();
+      setCurrentNote(data);
+    }
+
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -29,47 +33,62 @@ const EditNoteForm = () => {
   };
 
   const handleSubmit = (e) => {
-    const newNotes = allNotes.map((note) => {
-      if (note.id === currentNote.id) {
-        return { ...note, title: currentNote.title, note: currentNote.note };
+    const options = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(currentNote)
+    };
+
+    async function submitData() {
+      const response = await fetch(`http://localhost:3001/api/notes/${currentNote._id}`, options);
+
+      if (response.ok) {
+        setIsSuccess(true);
       }
+    }
 
-      return note;
-    });
-
-    localStorage.setItem('notes', JSON.stringify(newNotes));
+    submitData();
     e.preventDefault();
   };
 
   const handleDeleteNote = () => {
-    const newNotes = allNotes.filter((note) => note.id !== currentNote.id);
+    const options = {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' }
+    };
 
-    setCurrentNote(null);
-    setAllNotes(newNotes);
+    async function deleteData() {
+      const response = await fetch(`http://localhost:3001/api/notes/${currentNote._id}`, options);
+      if (response.ok) {
+        history.push('/');
+      }
+    }
 
-    localStorage.setItem('notes', JSON.stringify(newNotes));
-    history.push('/');
+    deleteData();
   };
 
   const { title, note } = currentNote;
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <FormGroup>
-        <Label>Title :</Label>
-        <Input type="text" name="title" value={title} onChange={handleTitleChange} />
-      </FormGroup>
-      <FormGroup>
-        <Label>Note :</Label>
-        <TextArea name="note" rows="12" value={note} onChange={handleNoteChange} />
-      </FormGroup>
-      <FormGroup>
-        <Button type="submit">Add</Button>
-        <Button danger onClick={handleDeleteNote}>
-          Delete
-        </Button>
-      </FormGroup>
-    </Form>
+    <>
+      {isSuccess && <Message text="Data sucessfully updated in your account" />}
+      <Form onSubmit={handleSubmit}>
+        <FormGroup>
+          <Label>Title :</Label>
+          <Input type="text" name="title" value={title} onChange={handleTitleChange} />
+        </FormGroup>
+        <FormGroup>
+          <Label>Note :</Label>
+          <TextArea name="note" rows="12" value={note} onChange={handleNoteChange} />
+        </FormGroup>
+        <FormGroup>
+          <Button type="submit">Save</Button>
+          <Button danger onClick={handleDeleteNote}>
+            Delete
+          </Button>
+        </FormGroup>
+      </Form>
+    </>
   );
 };
 

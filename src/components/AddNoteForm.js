@@ -1,45 +1,44 @@
 import React, { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { Form, FormGroup, Label, Input, TextArea } from './ui/Forms';
 import Button from './ui/Button';
 import Message from './ui/Message';
-import getLocalStorageData from '../utils/getLocalStorageData';
 
 const AddNoteForm = () => {
-  const [state, setState] = useState({ title: '', note: '' });
   const [isSuccess, setIsSuccess] = useState(false);
-
-  const addNoteId = (notes) => {
-    const noteId = uuidv4();
-
-    notes.push({ ...state, id: noteId });
-
-    return notes;
-  };
+  const [currentNote, setCurrentNote] = useState({ title: '', note: '' });
 
   const handleTitleChange = (e) => {
-    setState({ ...state, title: e.target.value });
+    setCurrentNote({ ...currentNote, title: e.target.value });
   };
 
   const handleNoteChange = (e) => {
-    setState({ ...state, note: e.target.value });
+    setCurrentNote({ ...currentNote, note: e.target.value });
   };
 
   const handleSubmit = (e) => {
-    const notes = getLocalStorageData('notes');
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(currentNote)
+    };
 
-    localStorage.setItem('notes', JSON.stringify(addNoteId(notes)));
+    async function fetchData() {
+      const response = await fetch('http://localhost:3001/api/notes', options);
 
-    setIsSuccess(true);
+      if (response.ok) {
+        setIsSuccess(true);
+      }
+    }
 
+    fetchData();
     e.preventDefault();
   };
 
-  const { title, note } = state;
+  const { title, note } = currentNote;
 
   return (
     <>
-      {isSuccess && <Message text="Data successfully saved in localStorage" />}
+      {isSuccess && <Message text="Data successfully saved in your account" />}
       <Form onSubmit={handleSubmit}>
         <FormGroup>
           <Label>Title :</Label>

@@ -8,6 +8,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { MongoClient } = require('mongodb');
+const cors = require('cors');
 
 const routes = require('./routes');
 const handleErrors = require('./middlewares/errorHandler');
@@ -20,8 +21,9 @@ const port = 3001;
 const url = 'mongodb://localhost:27017';
 const dbName = 'DinoTesDB';
 
-// body-parser works as middleware
-app.use(bodyParser.urlencoded({ extended: true }));
+// body-parser and cors works as middleware
+app.use(cors());
+app.use(bodyParser.json());
 
 // Connect to MongoDB with MongoClient
 MongoClient.connect(url, (err, client) => {
