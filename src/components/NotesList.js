@@ -17,7 +17,6 @@ const NotesListContainer = styled.div`
 
 const List = styled.ul`
   list-style: none;
-  margin-top: 0;
   padding: 0;
 `;
 
@@ -58,7 +57,10 @@ const NotesList = () => {
 
   return (
     <NotesListContainer>
-      <List>{listItem}</List>
+      <List>
+        <Separator />
+        {listItem}
+      </List>
     </NotesListContainer>
   );
 };
