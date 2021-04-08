@@ -47,12 +47,14 @@ exports.getNote = async (req, res, next) => {
 
 exports.updateNote = async (req, res, next) => {
   const { notesCollection } = req.app.locals;
+  const { title, note } = req.body;
 
   try {
-    const result = await notesCollection.updateOne(
-      { _id: ObjectId(req.params.id) },
-      { $set: { title: req.body.title, note: req.body.note } }
-    );
+    if (!title) {
+      throw new Error('Title is missing');
+    }
+
+    const result = await notesCollection.updateOne({ _id: ObjectId(req.params.id) }, { $set: { title, note } });
 
     res.status(200).json('Data successfully updated');
     console.log(result);
