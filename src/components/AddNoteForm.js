@@ -1,10 +1,24 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { Form, FormGroup, Label, Input, TextArea } from './ui/Forms';
 import Button from './ui/Button';
 import Message from './ui/Message';
 
+const InfoWrapper = (props) => {
+  const { status } = props;
+
+  if (status !== null) {
+    if (status === false) {
+      return <Message type="error" text="Title is required in this note" />;
+    }
+    return <Message type="success" text="Data successfully saved in your account" />;
+  }
+
+  return <></>;
+};
+
 const AddNoteForm = () => {
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(null);
   const [currentNote, setCurrentNote] = useState({ title: '', note: '' });
 
   const handleTitleChange = (e) => {
@@ -27,6 +41,8 @@ const AddNoteForm = () => {
 
       if (response.ok) {
         setIsSuccess(true);
+      } else {
+        setIsSuccess(false);
       }
     }
 
@@ -38,7 +54,7 @@ const AddNoteForm = () => {
 
   return (
     <>
-      {isSuccess && <Message text="Data successfully saved in your account" />}
+      <InfoWrapper status={isSuccess} />
       <Form onSubmit={handleSubmit}>
         <FormGroup>
           <Label>Title :</Label>

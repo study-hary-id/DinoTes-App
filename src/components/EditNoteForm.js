@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-underscore-dangle */
 import React, { useEffect, useState } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
@@ -5,10 +6,23 @@ import { Form, FormGroup, Label, Input, TextArea } from './ui/Forms';
 import Button from './ui/Button';
 import Message from './ui/Message';
 
+const InfoWrapper = (props) => {
+  const { status } = props;
+
+  if (status !== null) {
+    if (status === false) {
+      return <Message type="error" text="Title is required in this note" />;
+    }
+    return <Message type="success" text="Data successfully saved in your account" />;
+  }
+
+  return <></>;
+};
+
 const EditNoteForm = () => {
   const history = useHistory();
   const location = useLocation();
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(null);
   const [currentNote, setCurrentNote] = useState({ title: '', note: '' });
 
   useEffect(() => {
@@ -44,6 +58,8 @@ const EditNoteForm = () => {
 
       if (response.ok) {
         setIsSuccess(true);
+      } else {
+        setIsSuccess(false);
       }
     }
 
@@ -71,7 +87,7 @@ const EditNoteForm = () => {
 
   return (
     <>
-      {isSuccess && <Message text="Data sucessfully updated in your account" />}
+      <InfoWrapper status={isSuccess} />
       <Form onSubmit={handleSubmit}>
         <FormGroup>
           <Label>Title :</Label>
