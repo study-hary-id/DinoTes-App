@@ -2,6 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import logo from '../../assets/images/header-logo.png';
 
+const style = {
+  letterSpacing: '0.5rem'
+};
+
 const Container = styled.div`
   margin: 1rem;
   padding: 0.5rem;
@@ -9,8 +13,8 @@ const Container = styled.div`
 
 const Header = () => (
   <Container>
-    <img src={logo} alt="Devsaurus Logo" />
-    <h1>DinoTes App</h1>
+    <img src={logo} alt="Tie Notes Logo" />
+    <h1 style={style}>Tie Notes</h1>
   </Container>
 );
 

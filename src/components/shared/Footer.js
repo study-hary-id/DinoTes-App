@@ -1,6 +1,6 @@
+/* eslint-disable react/jsx-no-target-blank */
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 
 const Container = styled.div`
   margin: 1rem;
@@ -11,7 +11,11 @@ const Container = styled.div`
 const Footer = () => (
   <Container>
     <p>
-      by <Link to="/">Devsaurus</Link> &copy; 2021
+      by{' '}
+      <a href="https://github.com/study-hary-id" target="_blank">
+        study-hary-id
+      </a>{' '}
+      &copy; 2021
     </p>
   </Container>
 );
