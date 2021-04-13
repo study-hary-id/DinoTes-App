@@ -1,4 +1,4 @@
-/* eslint-disable react/react-in-jsx-scope */
+import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 import HomePage from './pages/Home';

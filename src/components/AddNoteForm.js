@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { Form, FormGroup, Label, Input, TextArea } from './ui/Forms';
+import { Form, FormGroup, Label, Input, TextArea } from './ui/Form';
 import Button from './ui/Button';
 import Message from './ui/Message';
 

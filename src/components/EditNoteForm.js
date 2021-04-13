@@ -2,7 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useEffect, useState } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
-import { Form, FormGroup, Label, Input, TextArea } from './ui/Forms';
+import { Form, FormGroup, Label, Input, TextArea } from './ui/Form';
 import Button from './ui/Button';
 import Message from './ui/Message';
 
