@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-/* eslint-disable react/react-in-jsx-scope */
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
