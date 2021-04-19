@@ -5,6 +5,7 @@
 */
 
 const { ObjectId } = require('mongodb');
+const { logger } = require('./utils/logger');
 
 exports.addNote = async (req, res, next) => {
   const { notesCollection } = req.app.locals;
@@ -12,13 +13,17 @@ exports.addNote = async (req, res, next) => {
 
   try {
     if (!title) {
+      logger.error(`${req.originalUrl} - ${req.ip} - Title is missing`);
       throw new Error('Title is missing');
     }
 
-    const result = await notesCollection.insertOne(req.body);
+    await notesCollection.insertOne(req.body);
+
+    logger.info(`${req.originalUrl} - ${req.ip} - Data successfully saved`);
+
     res.status(200).json('Data successfully saved');
-    console.log(result);
   } catch (error) {
+    logger.error(`${req.originalUrl} - ${req.ip} - ${error}`);
     next(error);
   }
 };
@@ -28,8 +33,12 @@ exports.getNotes = async (req, res, next) => {
 
   try {
     const result = await notesCollection.find().toArray();
+
+    logger.info(`${req.originalUrl} - ${req.ip} - All notes retrieved`);
+
     res.status(200).json(result);
   } catch (error) {
+    logger.error(`${req.originalUrl} - ${req.ip} - ${error}`);
     next(error);
   }
 };
@@ -39,8 +48,12 @@ exports.getNote = async (req, res, next) => {
 
   try {
     const result = await notesCollection.findOne({ _id: ObjectId(req.params.id) });
+
+    logger.info(`${req.originalUrl} - ${req.ip} - Notes retrieved`);
+
     res.status(200).json(result);
   } catch (error) {
+    logger.error(`${req.originalUrl} - ${req.ip} - ${error}`);
     next(error);
   }
 };
@@ -51,14 +64,17 @@ exports.updateNote = async (req, res, next) => {
 
   try {
     if (!title) {
+      logger.error(`${req.originalUrl} - ${req.ip} - Title is missing`);
       throw new Error('Title is missing');
     }
 
-    const result = await notesCollection.updateOne({ _id: ObjectId(req.params.id) }, { $set: { title, note } });
+    await notesCollection.updateOne({ _id: ObjectId(req.params.id) }, { $set: { title, note } });
+
+    logger.info(`${req.originalUrl} - ${req.ip} - Data sucessfully updated`);
 
     res.status(200).json('Data successfully updated');
-    console.log(result);
   } catch (error) {
+    logger.error(`${req.originalUrl} - ${req.ip} - ${error}`);
     next(error);
   }
 };
@@ -67,11 +83,13 @@ exports.deleteNote = async (req, res, next) => {
   const { notesCollection } = req.app.locals;
 
   try {
-    const result = await notesCollection.deleteOne({ _id: ObjectId(req.params.id) });
+    await notesCollection.deleteOne({ _id: ObjectId(req.params.id) });
+
+    logger.info(`${req.originalUrl} - ${req.ip} - Data successfuly deleted`);
 
     res.status(200).json('Data successfully deleted');
-    console.log(result);
   } catch (error) {
+    logger.error(`${req.originalUrl} - ${req.ip} - ${error}`);
     next(error);
   }
 };

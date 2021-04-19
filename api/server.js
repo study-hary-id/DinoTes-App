@@ -11,6 +11,7 @@ const { MongoClient } = require('mongodb');
 const cors = require('cors');
 
 const routes = require('./routes');
+const { logger } = require('./utils/logger');
 const handleErrors = require('./middlewares/errorHandler');
 
 // Express configuration section
@@ -40,5 +41,5 @@ app.use(handleErrors);
 
 app.listen(port, () => {
   // eslint-disable-next-line no-console
-  console.log(`API listening at http://localhost:${port}`);
+  logger.info(`API listening at http://localhost:${port}`);
 });
