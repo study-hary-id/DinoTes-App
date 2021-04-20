@@ -10,26 +10,28 @@ const bodyParser = require('body-parser');
 const { MongoClient } = require('mongodb');
 const cors = require('cors');
 
+const dotenv = require('dotenv').config({ path: __dirname + '/.env' });
+
 const routes = require('./routes');
 const { logger } = require('./utils/logger');
 const handleErrors = require('./middlewares/errorHandler');
 
 // Express configuration section
 const app = express();
-const port = 3001;
+const port = process.env.PORT;
 
 // Database configuration section
-const url = 'mongodb://localhost:27017';
-const dbName = 'DinoTesDB';
+const url = process.env.MONGODB_URL;
+const dbName = process.env.DATABASE_NAME;
 
-// body-parser and cors works as middleware
+// body-parser works as middleware
 app.use(cors());
 app.use(bodyParser.json());
 
 // Connect to MongoDB with MongoClient
 MongoClient.connect(url, (err, client) => {
   const db = client.db(dbName);
-  const notesCollection = db.collection('notes');
+  const notesCollection = db.collection(process.env.DATABASE_COLLECTION);
 
   app.locals.notesCollection = notesCollection;
 });
@@ -40,6 +42,5 @@ app.use('/', routes);
 app.use(handleErrors);
 
 app.listen(port, () => {
-  // eslint-disable-next-line no-console
   logger.info(`API listening at http://localhost:${port}`);
 });

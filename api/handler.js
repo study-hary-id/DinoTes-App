@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /*
   This file is used to configure all handler
   which is used in 'routes.js'
