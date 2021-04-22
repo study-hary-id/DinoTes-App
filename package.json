@@ -1,25 +1,16 @@
 {
-  "name": "tie-notes-web-app",
+  "name": "tie-notes-web",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "global": "^4.4.0",
-    "mongodb": "^3.6.5",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
-    "styled-components": "^5.2.3",
-    "uuid": "^8.3.2",
-    "web-vitals": "^1.0.1",
-    "winston": "^3.3.3"
+    "styled-components": "^5.2.3"
   },
   "scripts": {
     "start": "react-scripts start",
