@@ -1,8 +1,10 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { Form, FormGroup, Label, Input, TextArea } from './ui/Form';
 import Button from './ui/Button';
 import Message from './ui/Message';
+import getLocalStorageData from '../utils/getLocalStorageData';
 
 const InfoWrapper = (props) => {
   const { status } = props;
@@ -21,6 +23,14 @@ const AddNoteForm = () => {
   const [isSuccess, setIsSuccess] = useState(null);
   const [currentNote, setCurrentNote] = useState({ title: '', note: '' });
 
+  const addNoteId = (notes) => {
+    const noteId = uuidv4();
+
+    notes.push({ ...currentNote, id: noteId });
+
+    return notes;
+  };
+
   const handleTitleChange = (e) => {
     setCurrentNote({ ...currentNote, title: e.target.value });
   };
@@ -30,23 +40,15 @@ const AddNoteForm = () => {
   };
 
   const handleSubmit = (e) => {
-    const options = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(currentNote)
-    };
+    const notes = getLocalStorageData('notes');
 
-    async function fetchData() {
-      const response = await fetch('http://localhost:3001/api/notes', options);
-
-      if (response.ok) {
-        setIsSuccess(true);
-      } else {
-        setIsSuccess(false);
-      }
+    if (currentNote.title !== '') {
+      localStorage.setItem('notes', JSON.stringify(addNoteId(notes)));
+      setIsSuccess(true);
+    } else {
+      setIsSuccess(false);
     }
 
-    fetchData();
     e.preventDefault();
   };
 
